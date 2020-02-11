@@ -23,6 +23,55 @@ create function that renders all cards to page
   Work on getting the button rigged up
   Work on pulling the user input
 */
+const bubble = arr => {
+  let flag = true;
+
+  while (flag === true) {
+    flag = false;
+
+    for (let x = 0; x < arr.length-1; x++) {
+
+      if (arr[x]["last"].toLowerCase() > arr[x + 1]["last"].toLowerCase()) {
+        let temp = arr[x];
+        arr[x] = arr[x+1];
+        arr[x+1] = temp;
+        flag = true;
+      }
+    }
+  }
+  return arr;
+}
+
+function phoneNumberSort(str){
+  let tempVar = "";
+
+  for (let x = 0; x <= str.length; x++){
+    if (Number.isInteger(parseInt(str[x]))){
+      tempVar = tempVar + str[x];
+    }
+  }
+  return tempVar;
+}
+
+function validateEmail(inputText)
+{
+var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+console.log(inputText);
+if(inputText.value.match(mailformat))
+{
+return true;
+}
+else
+{
+
+
+return false;
+}
+}
+
+
+
+
 let userArray = [];
 
 $('#mySubmit').click(function(){
@@ -31,8 +80,22 @@ $('#mySubmit').click(function(){
   let last = $("#lastName").val();
   console.log(last)
   let email = $("#eMail").val();
+
   console.log(email)
   let phone = $("#phoneNumber").val();
+  phone = phoneNumberSort(phone);
+    if (first === "" && last === "" && email === "" && phone === ""){
+      alert("All fields must be filled out.")
+      return;
+    }
+    if (phone.length !== 10){
+      alert("Invalid entry, Please enter 10 digit phone number.")
+      return;
+    }
+    if (validateEmail(email) === false) {
+      alert("You have entered an invalid email address!")
+    }
+
   console.log(phone)
   let tempObj = {};
 
@@ -40,6 +103,9 @@ $('#mySubmit').click(function(){
   tempObj.last = last;
   tempObj.email = email;
   tempObj.phone = phone;
+
+//if statements to take only acceptable formats, email phone etc.
+
 
   userArray.push(tempObj)
 
@@ -59,28 +125,41 @@ $('#myClear').click(function(){
 
 });
 
-function cardDelete(){
+
+// splice out userArray
+//call card render function
+
+function cardDelete(index){
+
+userArray.splice(index,1);
+
+cardRender();
+
 
 };
+
 function cardRender(){
   $('.results').empty()
 
+  userArray = bubble(userArray);
+
   // TO DO - GO THROUGH AND MAKE EVERYTHING DYNAMIC
-  for (let x = 0; x < userArray.length; x++) {
+  for (let index = 0; index < userArray.length; index++) {
     let str = `
                 <div class="card">
                   <h2>Member</h2>
                   <p id="cardName" style="font-size: 1.5em;">
-                    Name: ` + userArray[x].first + `` + userArray[x].last +`
+                    Name: ` + userArray[index].first + ` ` + userArray[index].last +`
                   </p>
                   <p id="cardEmail" style="font-size: 1.5em;">
-                    Email: ` + userArray[x].email + `
+                    Email: ` + userArray[index].email + `
                   </p>
                   <p id="cardPhone" style="font-size: 1.5em;">
-                    Phone Number: ` + userArray[x].phone +`
+                    Phone Number: ` + userArray[index].phone +`
                   </p>
                   <p>
-                    <button type="button" id="`+ x +`">Delete</button>
+                    <button type="button" onClick="cardDelete(${index})"
+                     id="`+ index +`">Delete</button>
                   </p>
 
                  </div>
