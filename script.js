@@ -53,22 +53,12 @@ function phoneNumberSort(str){
   return tempVar;
 }
 
-function validateEmail(inputText)
-{
-var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-console.log(inputText);
-if(inputText.value.match(mailformat))
-{
-return true;
+function validateEmail(mail) {
+ if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+    return (true)
+  }
+    return (false)
 }
-else
-{
-
-
-return false;
-}
-}
-
 
 
 
@@ -84,7 +74,7 @@ $('#mySubmit').click(function(){
   console.log(email)
   let phone = $("#phoneNumber").val();
   phone = phoneNumberSort(phone);
-    if (first === "" && last === "" && email === "" && phone === ""){
+    if (first === "" || last === "" || email === "" || phone === ""){
       alert("All fields must be filled out.")
       return;
     }
@@ -94,6 +84,7 @@ $('#mySubmit').click(function(){
     }
     if (validateEmail(email) === false) {
       alert("You have entered an invalid email address!")
+      return;
     }
 
   console.log(phone)
